@@ -89,9 +89,9 @@ namespace Jint.Native.Function
                 var functionExpression = "function(" + p + ") { " + body + "}";
                 function = parser.ParseFunctionExpression(functionExpression); 
             }
-            catch (ParserException)
+            catch (ParserException pEx)
             {
-                throw new JavaScriptException(Engine.SyntaxError);
+                throw new JavaScriptException(Engine.SyntaxError, pEx.Message);
             }
 
             // todo: check if there is not a way to use the FunctionExpression directly instead of creating a FunctionDeclaration

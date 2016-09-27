@@ -64,9 +64,10 @@ namespace Jint
             { typeof(System.Text.RegularExpressions.Regex), (Engine engine, object v) => engine.RegExp.Construct(((System.Text.RegularExpressions.Regex)v).ToString().Trim('/')) }
         };
 
-        internal JintCallStack CallStack = new JintCallStack();
+		//internal JintCallStack CallStack = new JintCallStack();
+		public JintCallStack CallStack = new JintCallStack();
 
-        public Engine() : this(null)
+		public Engine() : this(null)
         {
         }
 
@@ -316,7 +317,7 @@ namespace Jint
                 var result = _statements.ExecuteProgram(program);
                 if (result.Type == Completion.Throw)
                 {
-                    throw new JavaScriptException(result.GetValueOrDefault())
+                    throw new JavaScriptException(result.GetValueOrDefault(), CallStack)
                     {
                         Location = result.Location
                     };

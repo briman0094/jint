@@ -51,6 +51,7 @@ namespace Jint.Native.Function
             f.BoundThis = thisArg;
             f.BoundArgs = arguments.Skip(1).ToArray();
             f.Prototype = Engine.Function.PrototypeObject;
+			f.FastAddProperty( "name", thisObj.AsObject().Get( "name" ), false, false, true );
 
             var o = target as FunctionInstance;
             if (o != null)

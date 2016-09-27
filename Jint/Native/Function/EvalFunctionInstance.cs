@@ -15,7 +15,7 @@ namespace Jint.Native.Function
             FastAddProperty("length", 1, false, false, false);
         }
 
-        public override JsValue Call(JsValue thisObject, JsValue[] arguments)
+	    public override JsValue Call(JsValue thisObject, JsValue[] arguments)
         {
             return Call(thisObject, arguments, false);
         }
@@ -28,11 +28,19 @@ namespace Jint.Native.Function
             }
 
             var code = TypeConverter.ToString(arguments.At(0));
+	        ParserOptions parserOptions = null;
+
+	        if (arguments.At(1).Type == Types.String)
+	        {
+		        parserOptions = new ParserOptions {
+			        Source = arguments.At(1).AsString()
+		        };
+	        }
 
             try
             {
                 var parser = new JavaScriptParser(StrictModeScope.IsStrictModeCode);
-                var program = parser.Parse(code);
+                var program = parser.Parse(code, parserOptions);
                 using (new StrictModeScope(program.Strict))
                 {
                     using (new EvalCodeScope())
@@ -58,7 +66,7 @@ namespace Jint.Native.Function
 
                             if (result.Type == Completion.Throw)
                             {
-                                throw new JavaScriptException(result.GetValueOrDefault());
+                                throw new JavaScriptException(result.GetValueOrDefault(), Engine.CallStack);
                             }
                             else
                             {
@@ -80,9 +88,9 @@ namespace Jint.Native.Function
                     }
                 }
             }
-            catch (ParserException)
+            catch (ParserException pEx)
             {
-                throw new JavaScriptException(Engine.SyntaxError);
+                throw new JavaScriptException(Engine.SyntaxError, pEx.Message);
             }
         }
     }

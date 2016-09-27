@@ -866,7 +866,7 @@ namespace Jint.Runtime
             var callable = func.TryCast<ICallable>();
             if (callable == null)
             {
-                throw new JavaScriptException(_engine.TypeError);
+                throw new JavaScriptException(_engine.TypeError, string.Format("{0} is not a function", (callee as Reference).GetReferencedName()));
             }
 
             if (r != null)
